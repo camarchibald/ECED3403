@@ -12,7 +12,7 @@ void modifyregisters(const int regnum, unsigned short value);
 
 void viewregisters(const int regnum);
 
-void modifymem(int type, unsigned short address, unsigned short value);
+void modifymem(int type, unsigned short address, unsigned char value);
 
 void printmem(int start, int stop, int type);
 

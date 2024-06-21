@@ -32,14 +32,14 @@ void instructionloop() {
     //Fetch program counter
     unsigned short pc = regfile[REG][PC].word;
     //Get instruction from IMEM, addressed as word
-    unsigned short currinstruction = mem[IMEM].wordaddr[pc].word;
+    unsigned short currinstruction = mem[IMEM].wordaddr[pc>>1].word;
 
     while (currinstruction != 0x0000 && pc != breakpoint) {
         //Decode the instruction
         decode(currinstruction, pc);
-        pc++;
+        pc+=2;
         regfile[REG][PC].word = pc;
-        currinstruction = mem[IMEM].wordaddr[pc].word;
+        currinstruction = mem[IMEM].wordaddr[pc>>1].word;
     }
 }
 
@@ -117,12 +117,12 @@ int MOVL_MOVH(unsigned short instruction) {
 void printinstruction(unsigned short instruction, unsigned short address, int type) {
     //If type outside scope of assignment 2
     if (type == -1) {
-        printf("%04x (%04x): %8s %04x\n", address * 2, address, "UNKNOWN", instruction);
+        printf("%04x: %8s %04x\n", address, "UNKNOWN", instruction);
         return;
     }
 
-    //Print byte address (printing word address don't print address * 2)
-    printf("%04x (%04x): %8s", address * 2, address, instname_encoding[type][TEXT]);
+    //Print byte address
+    printf("%04x: %8s", address, instname_encoding[type][TEXT]);
 
     //Get the print type from the lookup table (passing in the instruction (type))
     int instprinttype = instname_encoding[type][VALUE][0];

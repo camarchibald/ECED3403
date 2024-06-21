@@ -27,7 +27,7 @@ void loader(entry record) {
             //End of .xme file, only reaches if no errors found, print to user
             printf("File read - no errors detected. Starting address: %x\n\n", record.address);
             //Assign starting WORD address, from BYTE address supplied by S9
-            regfile[REG][PC].word = record.address / 2;
+            regfile[REG][PC].word = record.address;
             break;
         default:
             break;

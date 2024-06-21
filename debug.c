@@ -27,11 +27,11 @@ void viewregisters(const int regnum) {
 }
 
 //Modify memory contents
-void modifymem(int type, unsigned short address, unsigned short value) {
+void modifymem(int type, unsigned short address, unsigned char value) {
     //If address is valid and IMEM || DMEM
-    if(address >= 0 && address < WORDSIZE && (type == IMEM || type == DMEM))
+    if(address >= 0 && address < DATASIZE && (type == IMEM || type == DMEM))
         //Place value in memory
-        mem[type].wordaddr[address].word = value;
+        mem[type].byteaddr[address] = value;
     else
         printf("Invalid entry\n");
 }
@@ -39,7 +39,7 @@ void modifymem(int type, unsigned short address, unsigned short value) {
 //Set word address breakpoint
 void setbreakpoint(unsigned short address) {
     //If address valid
-    if(address >= 0 && address < WORDSIZE)
+    if(address >= 0 && address < DATASIZE)
         breakpoint = address;
     else
         printf("Breakpoint out of bounds\n");
@@ -54,8 +54,6 @@ void printmem(int start, int stop, int type) {
         printf("Invalid memory bounds\n");
         return;
     }
-
-    unsigned char printchar;
 
     //Condition to begin on the next lowest multiple of 16
     if (start % PRINTSIZE != 0)
@@ -76,7 +74,7 @@ void printmem(int start, int stop, int type) {
 
         //Print ascii values for the group of 16
         for (int j = i; j < i + PRINTSIZE; j++) {
-            printchar = mem[type].byteaddr[j];
+            unsigned char printchar = mem[type].byteaddr[j];
             //If NOT one of the printable ascii values, print '.' (Extended ascii above 127 not desired)
             if (printchar < ' ' || printchar > 127)
                 printchar = '.';

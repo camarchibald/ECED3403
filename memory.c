@@ -10,4 +10,4 @@ memblock regfile[REGFILEWIDTH][REGFILELEN] = {{0,0,0,0,0,0,0,0},{0,1,2,4,8,16,32
 memspace mem[2];
 
 //Initialize breakpoint to end of program
-unsigned short breakpoint = WORDSIZE - 1;
+unsigned short breakpoint = BYTESIZE - 1;

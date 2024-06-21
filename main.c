@@ -59,14 +59,14 @@ int main(void) {
                 break;
             case 'c':
                 //Modify memory
-                printf("Enter word address (hex), value (hex), and memory space (IMEM 0 or DMEM 1)\n");
+                printf("Enter btye address (hex), value (hex), and memory space (IMEM 0 or DMEM 1)\n");
                 int addr, val, space;
                 scanf("%x %x %d", &addr, &val, &space);
                 modifymem(space, addr, val);
                 break;
             case 'b':
                 //Set breakpoint
-                printf("Enter breakpoint word address (hex)\n");
+                printf("Enter breakpoint byte address (hex)\n");
                 int address;
                 scanf("%x", &address);
                 setbreakpoint(address);
