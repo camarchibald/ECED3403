@@ -51,12 +51,27 @@ void decode(unsigned short instruction, unsigned short address) {
     //Check first 3 bits, #010 ADD-ST, #011 MOVL-MOVH
     switch (mask(13, 3, instruction)) {
         case 0b010: //ADD-ST
-            //NOT [CEX-ST (bit12 != 0) or SETPRI-CLRCC (bit11,10,9,8,7 != 0b11011)] hence ADD-SXT
-            if (!(mask(12, 1, instruction) == 1 || mask(7, 5, instruction) == 0b11011))
+
+            if(mask(11, 2, instruction) == 0b11) {
+                //LD/ST (bit12,11 == 11)
+                instnum = LD + mask(10, 1, instruction);
+            } else if (!(mask(12, 1, instruction) == 1 || mask(7, 5, instruction) == 0b11011)) {
+                //NOT [CEX (bit12 != 0) or SETPRI-CLRCC (bit11,10,9,8,7 != 0b11011)] hence ADD-SXT
                 instnum = ADD_SXT(instruction);
+            }
             break;
+
         case 0b011: //MOVL-MOVH
-            instnum = MOVL_MOVH(instruction);
+            //MOVL + offset of bit12,11 (00,01,10,11)
+            instnum = MOVL + mask(11, 2, instruction);
+            break;
+
+        case 0b100: //LDR/STR
+        case 0b101:
+        case 0b110:
+        case 0b111:
+            //LDR + offset of bit14
+            instnum = LDR + mask(14, 1, instruction);
             break;
         default: //Not included in assignment 2
             break;
@@ -104,13 +119,6 @@ int ADD_SXT(unsigned short instruction) {
         }
     }
     return instnum;
-}
-
-//Decode the MOVL-MOVH section
-int MOVL_MOVH(unsigned short instruction) {
-    //return instruction number
-    //MOVL + offset of bit12,11 (00,01,10,11)
-    return MOVL + mask(11, 2, instruction);
 }
 
 //Print the opcode, modifiers, operands

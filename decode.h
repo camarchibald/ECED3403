@@ -78,8 +78,6 @@ void decode(unsigned short instruction, unsigned short address);
 
 int ADD_SXT(unsigned short instruction);
 
-int MOVL_MOVH(unsigned short instruction);
-
 void printinstruction(unsigned short instruction, unsigned short address, int type);
 
 unsigned short mask(int position, int numofbits, unsigned short input);
