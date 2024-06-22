@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #include "memory.h"
+#include "run.h"
 
 //How many bytes each type of value takes in the string
 #define ADDRBYTES 2

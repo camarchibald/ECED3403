@@ -75,6 +75,9 @@ int main(void) {
                 //Run program
                 controlloop();
                 break;
+            case 'p':
+                printpsw();
+                break;
             case 'x':
                 //Exit the program
                 printf("Exiting program\n");
@@ -99,5 +102,6 @@ void listoptions(void) {
         "c - modify memory\n"
         "b - add breakpoint\n"
         "g - run program\n"
+        "p - print psw\n"
         "x - exit\n");
 }

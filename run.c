@@ -19,22 +19,27 @@ unsigned short dmar;
 unsigned short ir;
 operands opreg;
 
-int psw[4];
+int psw[PSWLEN];
 
 void controlloop(void) {
     if(clock == 0) //At start of program, place MOV R0,R0 into instruction register to prevent incorrect decode
         ir = 0x4C00;
 
-    while(ir != 0x0000) {
+    int breakflag = 0;
+
+    while(!breakflag) {
         if(clock % 2 == 0) {
-            if(regfile[REG][PC].word == breakpoint)
+            if(regfile[REG][PC].word == breakpoint + 2)
                 break;
             F0();
             D0();
         } else {
             F1();
             E0();
+            if(ir == 0x0000)
+                breakflag = 1;
         }
+
         clock++;
     }
 }
@@ -55,7 +60,6 @@ void F1(void) {
 
 void D0(void) {
     int instnum = decode(ir);
-    printf("%s\n", instname_encoding[instnum][0]);
     assignoperands(instnum);
 }
 
@@ -66,51 +70,67 @@ void E0(void) {
             add(SRC, DST);
             break;
         case SUB:
-            break;
         case SUBC:
+            sub(SRC, DST);
             break;
         case DADD:
+            memblock s = {.word = SRC}, d = {.word = DST};
+            dadd(s, d);
             break;
         case CMP:
+            cmp(SRC, DST);
             break;
         case XOR:
+            xor(SRC,DST);
             break;
         case AND:
+            and(SRC,DST);
             break;
         case OR:
+            or(SRC,DST);
             break;
         case BIT:
+            bit(SRC,DST);
             break;
         case BIC:
+            bic(SRC,DST);
             break;
         case BIS:
+            bis(SRC,DST);
             break;
         case MOV:
+            mov(SRC);
             break;
         case SWAP:
+            swap(SRC,DST);
             break;
         case SRA:
+            sra(DST);
             break;
         case RRC:
+            rrc(DST);
             break;
         case SWPB:
+            swpb(DST);
             break;
         case SXT:
+            sxt(DST);
             break;
         case MOVL:
-            break;
         case MOVLZ:
-            break;
         case MOVLS:
+            movl(DST);
             break;
         case MOVH:
+            movh(DST);
             break;
         default:
-            printf("%s Not included in A2\n", instname_encoding[opreg.opcode][0]);
-        break;
+            //None
+            break;
     }
 
-
+    printf("%s executed at clock %d\n", instname_encoding[opreg.opcode][0], clock);
+    clearopreg();
 }
 
 void clearopreg(void) {

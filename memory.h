@@ -38,10 +38,18 @@ typedef enum reg {
     ALL = -1
 } reg;
 
+typedef struct nibbles {
+    unsigned short n0 : 4;
+    unsigned short n1 : 4;
+    unsigned short n2 : 4;
+    unsigned short n3 : 4;
+} nibbles;
+
 //Access a word as the word or a pair of bytes
 typedef union memblock {
     unsigned short word;
     unsigned char byte[2];
+    nibbles nibbles;
 } memblock;
 
 //IMEM or DMEM, can be accessed by either wordaddr (then get .word or .byte[0|1]) or byteaddr

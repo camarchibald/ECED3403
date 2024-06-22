@@ -6,8 +6,53 @@
 
 #include "decode.h"
 
+#define BIT7 1<<7
+#define BIT15 1<<15
+
+enum {
+    LOW = 0,
+    HIGH = 1
+};
+
 void add(unsigned short src, unsigned short dst);
-void senddestination(unsigned short res);
-void updatepsw(unsigned short src, unsigned short dst, unsigned short res);
+
+void sub(unsigned short src, unsigned short dst);
+
+void dadd(memblock src, memblock dst);
+unsigned char dadd_byte(memblock src, memblock dst);
+
+void cmp(unsigned short src, unsigned short dst);
+
+void xor(unsigned short src, unsigned short dst);
+
+void and(unsigned short src, unsigned short dst);
+
+void or(unsigned short src, unsigned short dst);
+
+void bit(unsigned short src, unsigned short dst);
+
+void bic(unsigned short src, unsigned short dst);
+
+void bis(unsigned short src, unsigned short dst);
+
+void mov(unsigned short src);
+
+void swap(unsigned short src, unsigned short dst);
+
+void sra(unsigned short dst);
+
+void rrc(unsigned short dst);
+
+void swpb(unsigned short dst);
+
+void sxt(unsigned short dst);
+
+void movl(unsigned short dst);
+
+void movh(unsigned short dst);
+
+void senddestination(unsigned short res, int destination);
+void updatepswALL(unsigned short src, unsigned short dst, unsigned short res);
+void updatepswNZ(unsigned short res);
 
 #endif //EXECUTE_H

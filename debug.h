@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "memory.h"
 #include "load.h"
+#include "run.h"
 
 void modifyregisters(const int regnum, unsigned short value);
 
@@ -17,4 +18,6 @@ void modifymem(int type, unsigned short address, unsigned char value);
 void printmem(int start, int stop, int type);
 
 void setbreakpoint(unsigned short address);
+
+void printpsw(void);
 #endif //DEBUG_H

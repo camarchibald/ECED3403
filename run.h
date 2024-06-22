@@ -41,7 +41,7 @@ extern unsigned short dmar;
 extern unsigned short ir;
 extern operands opreg;
 
-extern int psw[4];
+extern int psw[PSWLEN];
 
 void controlloop(void);
 
