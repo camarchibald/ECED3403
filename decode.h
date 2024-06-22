@@ -7,9 +7,13 @@
 
 #include <stdio.h>
 #include "memory.h"
+#include "run.h"
 
 #define TEXT 0
 #define VALUE 1
+
+#define NUMOFINSTRUCTIONS 40 //Number in the ISA
+#define INSTRUCTIONSTRINGLEN 7 //Max len of strings to print
 
 typedef enum printtypes {
     NONE = -1,
@@ -18,13 +22,15 @@ typedef enum printtypes {
     S_D,
     WB_D,
     DST,
-    B_D
+    B_D,
+    O_WB_S_D
 } printtypes;
 
 typedef enum bitlocations {
     RC = 7,
     WB = 6,
     SC = 3,
+    S = 3,
     D = 0,
     B = 3
 } bitlocations;
@@ -72,11 +78,15 @@ typedef enum instname {
     STR
 }instname;
 
+extern char instname_encoding[NUMOFINSTRUCTIONS][2][INSTRUCTIONSTRINGLEN];
+
 void instructionloop();
 
-void decode(unsigned short instruction, unsigned short address);
+int decode(unsigned short instruction);
 
 int ADD_SXT(unsigned short instruction);
+
+void assignoperands(int opcode);
 
 void printinstruction(unsigned short instruction, unsigned short address, int type);
 

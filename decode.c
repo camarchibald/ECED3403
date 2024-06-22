@@ -4,9 +4,6 @@
 
 #include "decode.h"
 
-#define NUMOFINSTRUCTIONS 40 //Number in the ISA
-#define INSTRUCTIONSTRINGLEN 7 //Max len of strings to print
-
 //Stores information about the name of instruction and type of printing it requires
 //Access array using the enumerated instruction name (instname)
 char instname_encoding[NUMOFINSTRUCTIONS][2][INSTRUCTIONSTRINGLEN] = {
@@ -19,7 +16,7 @@ char instname_encoding[NUMOFINSTRUCTIONS][2][INSTRUCTIONSTRINGLEN] = {
     {"RRC", WB_D}, {"SWPB", DST}, {"SXT", DST}, {"SETPRI", NONE},
     {"SVC", NONE}, {"SETCC", NONE}, {"CLRCC", NONE}, {"CEX", NONE},
     {"LD", NONE}, {"ST", NONE}, {"MOVL", B_D}, {"MOVLZ", B_D},
-    {"MOVLS", B_D}, {"MOVH", B_D}, {"LDR", B_D}, {"STR", B_D}
+    {"MOVLS", B_D}, {"MOVH", B_D}, {"LDR", NONE}, {"STR", NONE}
 };
 
 //Stores encoded values for registers and constants. Access using bits S/C or D.
@@ -36,7 +33,7 @@ void instructionloop() {
 
     while (currinstruction != 0x0000 && pc != breakpoint) {
         //Decode the instruction
-        decode(currinstruction, pc);
+        decode(currinstruction);
         pc+=2;
         regfile[REG][PC].word = pc;
         currinstruction = mem[IMEM].wordaddr[pc>>1].word;
@@ -44,7 +41,7 @@ void instructionloop() {
 }
 
 //Handle initial decoding layer
-void decode(unsigned short instruction, unsigned short address) {
+int decode(unsigned short instruction) {
     //Corresponds to the number in the ISA list
     int instnum = -1;
 
@@ -76,7 +73,8 @@ void decode(unsigned short instruction, unsigned short address) {
         default: //Not included in assignment 2
             break;
     }
-    printinstruction(instruction, address, instnum);
+    //printinstruction(instruction, address, instnum);
+    return instnum;
 }
 
 //Decode the ADD-SXT section
@@ -119,6 +117,30 @@ int ADD_SXT(unsigned short instruction) {
         }
     }
     return instnum;
+}
+
+void assignoperands(int opcode) {
+    opreg.opcode = opcode;
+
+    int insttype = instname_encoding[opcode][VALUE][0];
+
+    if(insttype == RC_WB_SC_D) {
+        opreg.RC = mask(RC, 1, ir);
+        opreg.SC = mask(SC, 3, ir);
+    }
+
+    if(insttype == RC_WB_SC_D || insttype == WB_S_D || insttype == WB_D)
+        opreg.WB = mask(WB, 1, ir);
+
+    if(insttype == WB_S_D)
+        opreg.SC = mask(SC, 3, ir);
+
+    if(insttype == B_D)
+        opreg.B = mask(B, 8, ir);
+
+    opreg.D = mask(D, 3, ir);
+
+    printf("");
 }
 
 //Print the opcode, modifiers, operands

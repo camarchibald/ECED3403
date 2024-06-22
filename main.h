@@ -12,6 +12,7 @@
 #include "load.h"
 #include "decode.h"
 #include "debug.h"
+#include "run.h"
 
 void listoptions(void);
 

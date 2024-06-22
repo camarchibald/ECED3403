@@ -71,6 +71,10 @@ int main(void) {
                 scanf("%x", &address);
                 setbreakpoint(address);
                 break;
+            case 'g':
+                //Run program
+                controlloop();
+                break;
             case 'x':
                 //Exit the program
                 printf("Exiting program\n");
@@ -94,5 +98,6 @@ void listoptions(void) {
         "m - view memory\n"
         "c - modify memory\n"
         "b - add breakpoint\n"
+        "g - run program\n"
         "x - exit\n");
 }

@@ -15,4 +15,8 @@ add_executable(A3 main.c
         memory.h
         debug.c
         debug.h
+        run.c
+        run.h
+        execute.c
+        execute.h
 )
