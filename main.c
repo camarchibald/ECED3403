@@ -7,7 +7,7 @@ int main(void) {
     char inchar = '0';
     char filename[20];
     FILE *infile;
-    printf("XM-23p loader - Cameron Archibald B00893056\n");
+    printf("XM-23p Emulator - Cameron Archibald B00893056\n");
     listoptions();
 
     //Allow user to select options
@@ -16,10 +16,6 @@ int main(void) {
         scanf(" %c", &inchar);
 
         switch (inchar) {
-            case 'd':
-                //Call decoder
-                instructionloop();
-                break;
             case '?':
                 //View different options
                 listoptions();
@@ -95,7 +91,6 @@ int main(void) {
 void listoptions(void) {
     printf("\n? - lists the options (below)\n"
         "l - load\n"
-        "d - decode starting from address in S9 record\n"
         "v - view registers\n"
         "r - modify registers\n"
         "m - view memory\n"

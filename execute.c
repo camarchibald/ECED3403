@@ -1,5 +1,5 @@
 // Created by Cameron Archibald B00893056 2024-21-06.
-// execute.c
+// execute.c - functions to execute instructions and update psw
 
 #include "execute.h"
 
@@ -179,6 +179,8 @@ void movl(unsigned short dst) {
             break;
         case MOVLS:
             result += 0xFF00;
+            break;
+        default:
             break;
     }
     senddestination(result, opreg.D);

@@ -1,5 +1,5 @@
 // Created by Cameron Archibald B00893056 2024-21-06.
-// execute.c
+// execute.h - definitions for execution functions, updating psw
 
 #ifndef EXECUTE_H
 #define EXECUTE_H

@@ -1,6 +1,5 @@
-//
 // Created by Cameron Archibald B00893056 on 2024-05-29.
-// Decode functions (Lab 2)
+// decode.c - decode functions, place operands in opreg
 
 #include "decode.h"
 
@@ -24,22 +23,6 @@ char rc_encoding[8][2][INSTRUCTIONSTRINGLEN] = {
     {"R0", 0}, {"R1", 1}, {"R2", 2}, {"R3", 4}, {"R4", 8}, {"R5/LR", 16}, {"R6/SP", 32}, {"R7/PC", -1}
 };
 
-//Cycle through instructions until instruction = 0x0000
-void instructionloop() {
-    //Fetch program counter
-    unsigned short pc = regfile[REG][PC].word;
-    //Get instruction from IMEM, addressed as word
-    unsigned short currinstruction = mem[IMEM].wordaddr[pc>>1].word;
-
-    while (currinstruction != 0x0000 && pc != breakpoint) {
-        //Decode the instruction
-        decode(currinstruction);
-        pc+=2;
-        regfile[REG][PC].word = pc;
-        currinstruction = mem[IMEM].wordaddr[pc>>1].word;
-    }
-}
-
 //Handle initial decoding layer
 int decode(unsigned short instruction) {
     //Corresponds to the number in the ISA list
@@ -49,7 +32,7 @@ int decode(unsigned short instruction) {
     switch (mask(13, 3, instruction)) {
         case 0b010: //ADD-ST
 
-            if(mask(11, 2, instruction) == 0b11) {
+            if (mask(11, 2, instruction) == 0b11) {
                 //LD/ST (bit12,11 == 11)
                 instnum = LD + mask(10, 1, instruction);
             } else if (!(mask(12, 1, instruction) == 1 || mask(7, 5, instruction) == 0b11011)) {
@@ -70,10 +53,10 @@ int decode(unsigned short instruction) {
             //LDR + offset of bit14
             instnum = LDR + mask(14, 1, instruction);
             break;
+
         default: //Not included in assignment 2
             break;
     }
-    //printinstruction(instruction, address, instnum);
     return instnum;
 }
 
@@ -98,7 +81,7 @@ int ADD_SXT(unsigned short instruction) {
             //SRA-SXT (bit8 == 1)
 
             //Offset from SRA hard coded from bit5,4,3
-            switch(mask(3,3,instruction)) {
+            switch (mask(3, 3, instruction)) {
                 case 0b000:
                     instnum = SRA; //SRA
                     break;
@@ -119,68 +102,30 @@ int ADD_SXT(unsigned short instruction) {
     return instnum;
 }
 
+//Place operands in opreg
 void assignoperands(int opcode) {
+    //Place opcode in opreg
     opreg.opcode = opcode;
 
+    //Get the type of instruction
     int insttype = instname_encoding[opcode][VALUE][0];
 
-    if(insttype == RC_WB_SC_D) {
+    //Place values in opreg based on type
+    if (insttype == RC_WB_SC_D) {
         opreg.RC = mask(RC, 1, ir);
         opreg.SC = mask(SC, 3, ir);
     }
 
-    if(insttype == RC_WB_SC_D || insttype == WB_S_D || insttype == WB_D)
+    if (insttype == RC_WB_SC_D || insttype == WB_S_D || insttype == WB_D)
         opreg.WB = mask(WB, 1, ir);
 
-    if(insttype == WB_S_D)
+    if (insttype == WB_S_D)
         opreg.SC = mask(SC, 3, ir);
 
-    if(insttype == B_D)
+    if (insttype == B_D)
         opreg.B = mask(B, 8, ir);
 
     opreg.D = mask(D, 3, ir);
-
-    printf("");
-}
-
-//Print the opcode, modifiers, operands
-void printinstruction(unsigned short instruction, unsigned short address, int type) {
-    //If type outside scope of assignment 2
-    if (type == -1) {
-        printf("%04x: %8s %04x\n", address, "UNKNOWN", instruction);
-        return;
-    }
-
-    //Print byte address
-    printf("%04x: %8s", address, instname_encoding[type][TEXT]);
-
-    //Get the print type from the lookup table (passing in the instruction (type))
-    int instprinttype = instname_encoding[type][VALUE][0];
-
-    //Print R/C
-    if (instprinttype == RC_WB_SC_D)
-        printf(" RC: %d", mask(RC, 1, instruction));
-
-    //Print W/B
-    if (instprinttype == RC_WB_SC_D || instprinttype == WB_S_D || instprinttype == WB_D)
-        printf(" W/B: %d", mask(WB, 1, instruction));
-
-    //If type R/C and RC == 1, print CON and the value (x) from the lokup table
-    if (instprinttype == RC_WB_SC_D && mask(RC, 1, instruction))
-        //Table accessed from bit5,4,3
-        printf(" CON: %d", rc_encoding[mask(SC, 3, instruction)][VALUE][0]);
-    //Type R/C and RC == 0 or type S, print SRC and value (Rx) from lookup table
-    else if (instprinttype == RC_WB_SC_D || instprinttype == WB_S_D || instprinttype == S_D)
-        //Table accessed from bit5,4,3
-        printf(" SRC: %s", rc_encoding[mask(SC, 3, instruction)][TEXT]);
-
-    //Print byte
-    if (instprinttype == B_D)
-        printf(" BYTE: %02x", mask(B, 8, instruction));
-
-    //Print dest register, table accessed from bit2,1,0
-    printf(" DST: %s", rc_encoding[mask(D, 3, instruction)][TEXT]);
-    printf("\n");
 }
 
 //Return only desired bits
