@@ -8,12 +8,16 @@
 
 #define BIT7 1<<7
 #define BIT15 1<<15
+#define LOWBYTE 0x00FF
+#define HIGHBYTE 0xFF00
+
 
 enum {
     LOW = 0,
     HIGH = 1
 };
 
+//All execution functions
 void add(unsigned short src, unsigned short dst);
 
 void sub(unsigned short src, unsigned short dst);
@@ -51,8 +55,12 @@ void movl(unsigned short dst);
 
 void movh(unsigned short dst);
 
+
+//Utility functions
 void senddestination(unsigned short res, int destination);
+
 void updatepswALL(unsigned short src, unsigned short dst, unsigned short res);
+
 void updatepswNZ(unsigned short res);
 
 #endif //EXECUTE_H
