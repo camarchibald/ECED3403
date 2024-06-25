@@ -85,11 +85,11 @@ void printmem(int start, int stop, int type) {
 }
 
 void printpsw(void) {
-    printf("Carry: %d\n"
-           "Zero:  %d\n"
-           "Negative: %d\n"
-           "Sleep: %d\n"
-           "Overflow: %d\n",
+    printf("C: %d "
+           "Z: %d "
+           "N: %d "
+           "S: %d "
+           "V: %d\n",
            psw[C], psw[Z], psw[N], psw[SLP], psw[V]);
 }
 
