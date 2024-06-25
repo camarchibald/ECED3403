@@ -7,6 +7,7 @@
 #include "memory.h"
 #include "decode.h"
 #include "execute.h"
+#include "debug.h"
 
 #define PSWLEN 5
 

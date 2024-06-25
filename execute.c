@@ -167,7 +167,15 @@ void swap(unsigned short src, unsigned short dst) {
 }
 
 void sra(unsigned short dst) {
+    //Save msbit
+    int tempmsb = mask(15, 1, dst);
     dst = dst >> 1;
+
+    //Clear either bit 7 or bit15 based on W/B, then place the saved msbit in that
+    if (opreg.WB == 1)
+        dst = (dst & ~(BIT7)) + (tempmsb * (BIT7));
+    else
+        dst = (dst & ~(BIT15)) + (tempmsb * (BIT15));
 
     senddestination(dst, opreg.D);
     updatepswNZ(dst);

@@ -42,6 +42,7 @@ void controlloop(void) {
         } else {
             F1();
             E0();
+            printpsw();
             //Once ir contains instruction 0000 (after E0 for the preceeding instruction), break
             if (ir == 0x0000)
                 breakflag = 1;
