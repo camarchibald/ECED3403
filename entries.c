@@ -4,12 +4,44 @@
 
 #include "entries.h"
 
+//#define mov //Test 1
+//#define arithmetic //Test 2
+//#define shift //Test 6
+
 //Read each line and load as applicable
 void readentry(FILE *infile) {
     entry record;
     //Initially true to enter the while loop
     record.checksum = true;
     record.recordtype = 0;
+
+    //Facilitate testing by preloading registers
+#ifdef mov
+    regfile[REG][R0].word = 0x0C0D;
+    regfile[REG][R1].word = 0x1A01;
+    regfile[REG][R2].word = 0x0C0D;
+    regfile[REG][R3].word = 0x0C0D;
+    regfile[REG][R4].word = 0x0C0D;
+    regfile[REG][R5].word = 0x0C0D;
+    regfile[REG][R6].word = 0x0C0D;
+#endif
+
+#ifdef arithmetic
+    regfile[REG][R0].word = 0x0F02;
+    regfile[REG][R1].word = 0x010F;
+    regfile[REG][R2].word = 0x0004;
+    regfile[REG][R3].word = 0x0001;
+    regfile[REG][R4].word = 0x1A89;
+    regfile[REG][R5].word = 0x1F12;
+#endif
+
+#ifdef shift
+    regfile[REG][R0].word = 0x8FF1;
+    regfile[REG][R1].word = 0x0121;
+    regfile[REG][R2].word = 0x0001;
+    regfile[REG][R3].word = 0x0A00;
+#endif
+
 
     //While lines left to read and the checksum is true and recordtype is not INVALID
     while (fgets(record.string, MAXRECLEN, infile) && record.checksum && (record.recordtype != INVALID)) {
